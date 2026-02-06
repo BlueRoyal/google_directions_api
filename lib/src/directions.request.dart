@@ -25,6 +25,9 @@ String _convertLocation(dynamic location) {
       'Unsupported type of argument: ${location.runtimeType}');
 }
 
+int _toEpochSeconds(DateTime dateTime) =>
+    dateTime.millisecondsSinceEpoch ~/ 1000;
+
 /// Settings for route calculation.
 ///
 /// `origin` and `destination` arguments are required.
@@ -429,8 +432,8 @@ class TransitOptions {
 
   @override
   String toString() =>
-      '${_addIfNotNull('arrival_time', arrivalTime?.millisecondsSinceEpoch)}'
-      '${_addIfNotNull('departure_time', departureTime?.millisecondsSinceEpoch)}'
+      '${_addIfNotNull('arrival_time', arrivalTime == null ? null : _toEpochSeconds(arrivalTime!))}'
+      '${_addIfNotNull('departure_time', departureTime == null ? null : _toEpochSeconds(departureTime!))}'
       '${_addIfNotNull('transit_mode', modes?.map((_) => _.toString()).join('|'))}'
       '${_addIfNotNull('transit_routing_preference', routingPreference)}';
 }
@@ -556,7 +559,7 @@ class DrivingOptions {
 
   @override
   String toString() =>
-      '${_addIfNotNull('departure_time', departureTime?.millisecondsSinceEpoch)}'
+      '${_addIfNotNull('departure_time', departureTime == null ? null : _toEpochSeconds(departureTime!))}'
       '${_addIfNotNull('traffic_model', trafficModel)}';
 }
 
@@ -708,6 +711,7 @@ class TrafficModel {
   static final values = <TrafficModel>[
     bestGuess,
     pessimistic,
+    optimistic,
   ];
 
   /// Indicates that the returned `durationInTraffic`
